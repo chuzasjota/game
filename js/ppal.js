@@ -1,15 +1,9 @@
-var juego = new Phaser.Game(370,550,Phaser.AUTO,'bloquejuego');
 var fondoJuego, pajaro, boton, arcade;
 var nave, cursores;
 var balas, tiempoBala = 0, botonDisparo;
 var enemigos
 
-function colision(bala, enemigo){
-	bala.kill();
-	enemigo.kill();
-}
-
-
+var juego = new Phaser.Game(370,550,Phaser.AUTO,'bloquejuego');
 
 var estadoPpal = {
 	preload: function(){
@@ -48,10 +42,6 @@ var estadoPpal = {
 		enemigos.x = 50;
 		enemigos.y = 30;
 
-		function descender(){
-			enemigos.y += 10;
-		}
-
 		var animacion = juego.add.tween(enemigos).to({x:100},1000,Phaser.Easing.Linear.None, true, 0, 1000, true);
 		animacion.onLoop.add(descender, this);
 	},
@@ -73,9 +63,19 @@ var estadoPpal = {
 				tiempoBala = juego.time.now + 100;
 			}
 		}
-
+		juego.physics.arcade.overlap(balas, enemigos, colision, null, this);
 	}
 };
+
+
+function colision(bala, enemigo){
+	bala.kill();
+	enemigo.kill();
+}
+
+function descender(){
+	enemigos.y += 10;
+}
 
 juego.state.add('principal',estadoPpal);
 juego.state.start('principal');
